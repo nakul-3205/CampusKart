@@ -1,0 +1,5 @@
+authtoken: 30Bgz4DLxtXocqYN1jKdFXRcxUc_5Lo1XhuctcQkKkGAnTyby
+tunnels:
+  web:
+    addr: 3000
+    proto: http
