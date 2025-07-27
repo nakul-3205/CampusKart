@@ -8,6 +8,7 @@ export interface IListing {
   sellerId: string;
   sellerName: string;
   sellerEmail: string;
+  status: 'active' | 'sold';
   image: string;
   isPinned: boolean;
   createdAt: Date;
@@ -21,6 +22,7 @@ const ListingSchema = new Schema<IListing>({
   sellerId: { type: String, required: true },
   sellerName: { type: String },
   sellerEmail: { type: String },
+  status: {type: String,enum: ["active", "sold"],default: "active",},
   image: { type: String },
   isPinned: { type: Boolean, default: false },
   createdAt: { type: Date, default: Date.now },
