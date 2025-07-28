@@ -16,7 +16,7 @@ export default clerkMiddleware(async (auth, req) => {
     return NextResponse.redirect(url)
   }
   if(userId && isPublicRoute(req)){
-    const url=new URL('/dashboard',req.url)
+    const url=new URL('/feed',req.url)
     return NextResponse.redirect(url)
   }
  

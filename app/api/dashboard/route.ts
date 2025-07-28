@@ -3,6 +3,7 @@ import { auth } from "@clerk/nextjs/server";
 import Listing from "@/models/Listing";
 import { connectToDB } from "@/lib/connectToDB";
 import { currentUser } from "@clerk/nextjs/server";
+
 export async function GET() {
   await connectToDB();
 
@@ -13,7 +14,7 @@ export async function GET() {
   }
      const clerkuser=await currentUser()
      let name= clerkuser?.fullName
-     let email= clerkuser?.emailAddresses[0]
+     let email= clerkuser?.emailAddresses[0]?.emailAddress
      let avatar=clerkuser?.imageUrl
   try {
     const userDetails = {
@@ -22,7 +23,7 @@ export async function GET() {
       avatar: avatar|| "",
     };
 
-    const listings = await Listing.find({ userId })
+    const listings = await Listing.find({sellerId: userId })
       .select("title description price image")
       .lean();
 

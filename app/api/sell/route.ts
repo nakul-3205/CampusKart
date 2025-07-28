@@ -13,7 +13,7 @@ export async function POST(req: NextRequest) {
      const clerkuser = await currentUser()
 
   const name = clerkuser?.fullName
-  const email = clerkuser?.primaryEmailAddress
+  const email = clerkuser?.primaryEmailAddress?.emailAddress
     await connectToDB();
 
     const body = await req.json();
@@ -23,7 +23,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Missing fields" }, { status: 400 });
     }
 
-    const user = await User.findById(userId);
+    const user = await User.findOne({ clerkId: userId });
     if (!user) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
@@ -44,6 +44,7 @@ export async function POST(req: NextRequest) {
     } catch (err) {
       return NextResponse.json({ error: "Image upload failed" }, { status: 500 });
     }
+    console.log(imageUrl,userId)
 
     const newListing = await Listing.create({
       title,
@@ -52,8 +53,8 @@ export async function POST(req: NextRequest) {
       sellerId:userId,
       sellerName:name,
       sellerEmail:email,
-      imageUrl,
-      createdBy: userId,
+      image:imageUrl,
+      
     });
 
     user.listingsCount += 1;
