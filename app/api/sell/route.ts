@@ -1,21 +1,21 @@
-//the route handles the sell logic and temproary payments logic using the payments button instead of stripe
-
 import { NextRequest, NextResponse } from "next/server";
-import { connectToDB } from "@/lib/connectToDB"; 
+import { connectToDB } from "@/lib/connectToDB";
 import Listing from "@/models/Listing";
 import User from "@/models/User";
 import { uploadImageToCloudinary } from "@/lib/cloudinary";
-import { auth,currentUser } from "@clerk/nextjs/server";
-// import { clerkClient } from "@clerk/nextjs/server";
+import { auth, currentUser } from "@clerk/nextjs/server";
+import { scanImageNSFW } from "@/lib/scanImage";
+import { scanHive } from "@/lib/scanHive";   
+
 export async function POST(req: NextRequest) {
   try {
     const { userId } = await auth();
-     const clerkuser = await currentUser()
+    const clerkuser = await currentUser();
 
-  const name = clerkuser?.fullName
-  const email = clerkuser?.primaryEmailAddress?.emailAddress
+    const name = clerkuser?.fullName;
+    const email = clerkuser?.primaryEmailAddress?.emailAddress;
+
     await connectToDB();
-
     const body = await req.json();
     const { title, description, category, price, image } = body;
 
@@ -28,54 +28,58 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
-    //  Listing Permission Check
+    // Permissions
     if (!user.hasUsedFreeListing) {
-      
       user.hasUsedFreeListing = true;
     } else if (!user.canListNext) {
-    
       return NextResponse.json({ redirect: "/payments" }, { status: 402 });
     }
 
-    //  Upload image
     let imageUrl;
     try {
       imageUrl = await uploadImageToCloudinary(image);
-    } catch (err) {
+    } catch {
       return NextResponse.json({ error: "Image upload failed" }, { status: 500 });
     }
-    console.log(imageUrl,userId)
+
+    try {
+      const { safe: safeSight, reason: reasonSight } = await scanImageNSFW(imageUrl);
+      if (!safeSight) {
+                console.log('failing at sightenginge',safeSight,reasonSight)
+
+        return NextResponse.json({ error: `Sightengine flagged: ${reasonSight}` }, { status: 400 });
+      }
+    } catch {
+      return NextResponse.json({ error: "Sightengine scan failed" }, { status: 500 });
+    }
+
+    try {
+      const { safe: safeHive, reason: reasonHive } = await scanHive(imageUrl);
+      if (!safeHive) {
+        console.log('failing at hive',safeHive,reasonHive)
+        return NextResponse.json({ error: `Hive flagged: ${reasonHive}` }, { status: 409 });
+      }
+    } catch {
+      return NextResponse.json({ error: "Hive scan failed" }, { status: 500 });
+    }
 
     const newListing = await Listing.create({
       title,
       description,
       price,
-      sellerId:userId,
-      sellerName:name,
-      sellerEmail:email,
-      image:imageUrl,
-      
+      sellerId: userId,
+      sellerName: name,
+      sellerEmail: email,
+      image: imageUrl,
     });
 
     user.listingsCount += 1;
-
-    
-    if (user.canListNext) {
-      user.canListNext = false;
-    }
-
+    if (user.canListNext) user.canListNext = false;
     await user.save();
 
-    return NextResponse.json(
-      { message: "Listing created", listing: newListing },
-      { status: 201 }
-    );
-
+    return NextResponse.json({ message: "Listing created", listing: newListing }, { status: 201 });
   } catch (err) {
     console.error("Error in /api/sell:", err);
-    return NextResponse.json(
-      { error: "Internal Server Error" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
   }
 }

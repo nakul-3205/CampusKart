@@ -6,7 +6,7 @@ import Image from 'next/image';
 import { useClerk } from '@clerk/nextjs'; // Import useClerk for logout functionality
 import {
   PlusCircleIcon,
-  PencilIcon,
+  // PencilIcon, // Removed this icon as the edit button is removed
   TagIcon,
   CubeTransparentIcon,
   UserCircleIcon,
@@ -230,12 +230,7 @@ export default function UserDashboard() {
                       ₹{l.price.toLocaleString('en-IN')}
                     </p>
                     <div className="flex flex-col space-y-3 mt-auto pt-4 border-t border-gray-100">
-                      <Link href={`/user-dashboard/${l._id}`} passHref>
-                        <button className="w-full flex items-center justify-center text-blue-600 bg-blue-50 hover:bg-blue-100 font-medium px-4 py-2 rounded-lg transition-colors duration-150 shadow-sm hover:shadow-md">
-                          <PencilIcon className="h-5 w-5 mr-2" />
-                          Edit Listing
-                        </button>
-                      </Link>
+                      {/* Removed the Link and button for "Edit Listing" */}
                       <button
                         onClick={() => toggle(l._id)}
                         className={`w-full px-4 py-2 rounded-lg font-semibold transition-all duration-200 shadow-sm hover:shadow-md
