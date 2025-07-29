@@ -1,102 +1,148 @@
-import Image from "next/image";
+'use client';
 
-export default function Home() {
+import Link from 'next/link';
+import Image from 'next/image';
+import {
+  ArrowRightIcon,
+  BookOpenIcon, // New icon for 'Academic Exchange'
+  ShoppingBagIcon,
+  MagnifyingGlassIcon,
+  UserGroupIcon,
+  CurrencyDollarIcon // New icon for 'Earn/Save'
+} from '@heroicons/react/24/solid';
+
+export default function HomePage() {
   return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
-
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 text-gray-800 font-sans">
+      {/* Navbar */}
+      <nav className="bg-white shadow-sm py-4 px-6 md:px-8 lg:px-12 flex justify-between items-center border-b border-gray-100">
+        <Link href="/" className="text-2xl font-extrabold text-gray-900 tracking-tight">
+          CampusKart
+        </Link>
+        <div className="space-x-4">
+          <Link href="/signin" passHref>
+            <button className="text-gray-700 font-semibold px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors duration-200">
+              Sign In
+            </button>
+          </Link>
+          <Link href="/signup" passHref>
+            <button className="bg-gray-800 text-white font-semibold px-4 py-2 rounded-lg shadow-md hover:bg-black transition-colors duration-200">
+              Sign Up
+            </button>
+          </Link>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
+      </nav>
+
+      {/* Hero Section */}
+      <section className="relative flex flex-col items-center justify-center text-center py-20 px-6 md:py-28 lg:py-36 overflow-hidden">
+        <div className="max-w-4xl mx-auto z-10">
+          <h1 className="text-5xl md:text-6xl lg:text-7xl font-extrabold leading-tight mb-6 text-gray-900">
+            CampusKart: Buy, Sell, <br className="hidden md:inline" /> Connect on Campus.
+          </h1>
+          <p className="text-lg md:text-xl text-gray-700 mb-10 max-w-2xl mx-auto">
+            Your exclusive marketplace for students to easily buy and sell textbooks, electronics, furniture, and more within your university community.
+          </p>
+          <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 justify-center">
+            <Link href="/signup" passHref>
+              <button className="bg-gray-800 text-white font-bold py-3 px-8 rounded-full text-lg shadow-xl hover:bg-black transform hover:scale-105 transition-all duration-300 flex items-center justify-center">
+                Join CampusKart <ArrowRightIcon className="ml-2 h-5 w-5" />
+              </button>
+            </Link>
+            <Link href="/feed" passHref>
+              <button className="bg-white text-gray-800 border-2 border-gray-800 font-bold py-3 px-8 rounded-full text-lg shadow-xl hover:bg-gray-100 transform hover:scale-105 transition-all duration-300 flex items-center justify-center">
+                Explore Listings <MagnifyingGlassIcon className="ml-2 h-5 w-5" />
+              </button>
+            </Link>
+          </div>
+        </div>
+        {/* Thematic image placeholder for CampusKart */}
+        <div className="mt-16 w-full max-w-5xl px-4">
+          <div className="relative w-full h-64 sm:h-80 md:h-96 bg-gray-200 rounded-3xl shadow-2xl overflow-hidden border border-gray-300 flex items-center justify-center">
+            <Image
+              src="https://placehold.co/1200x600/E0E0E0/333333?text=Campus+Marketplace+Scene"
+              alt="Campus Marketplace Scene"
+              layout="fill"
+              objectFit="cover"
+              className="rounded-2xl"
+            />
+            <span className="absolute text-gray-500 text-xl font-semibold">Your Campus, Your Marketplace</span>
+          </div>
+        </div>
+      </section>
+
+      {/* Features Section */}
+      <section className="py-20 px-6 md:px-8 lg:px-12 bg-white">
+        <div className="max-w-6xl mx-auto text-center mb-16">
+          <h2 className="text-4xl md:text-5xl font-extrabold text-gray-900 mb-6">
+            Why CampusKart?
+          </h2>
+          <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+            A trusted and convenient way for students to save money, earn cash, and find campus essentials.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 max-w-6xl mx-auto">
+          {/* Feature 1: Seamless Transactions */}
+          <div className="bg-gray-50 rounded-xl p-8 shadow-lg border border-gray-200 flex flex-col items-center text-center transform transition-transform duration-300 hover:scale-105 hover:shadow-xl">
+            <ShoppingBagIcon className="h-16 w-16 text-gray-700 mb-6" />
+            <h3 className="text-2xl font-bold text-gray-900 mb-3">Easy Buying & Selling</h3>
+            <p className="text-gray-700">
+              Post items or discover deals in a few taps. Connect directly with students on your campus.
+            </p>
+          </div>
+          {/* Feature 2: Academic Exchange */}
+          <div className="bg-gray-50 rounded-xl p-8 shadow-lg border border-gray-200 flex flex-col items-center text-center transform transition-transform duration-300 hover:scale-105 hover:shadow-xl">
+            <BookOpenIcon className="h-16 w-16 text-gray-700 mb-6" />
+            <h3 className="text-2xl font-bold text-gray-900 mb-3">Textbooks & Notes</h3>
+            <p className="text-gray-700">
+              Find used textbooks at great prices or sell your old ones to new students, recycling resources on campus.
+            </p>
+          </div>
+          {/* Feature 3: Community Focused */}
+          <div className="bg-gray-50 rounded-xl p-8 shadow-lg border border-gray-200 flex flex-col items-center text-center transform transition-transform duration-300 hover:scale-105 hover:shadow-xl">
+            <UserGroupIcon className="h-16 w-16 text-gray-700 mb-6" />
+            <h3 className="text-2xl font-bold text-gray-900 mb-3">Trusted Campus Network</h3>
+            <p className="text-gray-700">
+              Trade safely and conveniently with verified students within your university's trusted network.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* Call to Action Section */}
+      <section className="py-20 px-6 md:px-8 lg:px-12 text-center bg-gradient-to-r from-gray-800 to-black text-white">
+        <div className="max-w-3xl mx-auto">
+          <h2 className="text-4xl md:text-5xl font-extrabold mb-6">
+            Ready to Connect with Your Campus?
+          </h2>
+          <p className="text-lg md:text-xl mb-10 opacity-90">
+            Join CampusKart today and revolutionize how you buy and sell at university!
+          </p>
+          <Link href="/signup" passHref>
+            <button className="bg-white text-gray-800 font-bold py-4 px-10 rounded-full text-xl shadow-xl hover:bg-gray-100 transform hover:scale-105 transition-all duration-300">
+              Create Your CampusKart Account
+            </button>
+          </Link>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="bg-gray-900 text-gray-300 py-8 px-6 md:px-8 lg:px-12 text-center">
+        <div className="max-w-6xl mx-auto">
+          <p className="mb-4 text-lg font-semibold">CampusKart</p>
+          <p className="text-sm">&copy; {new Date().getFullYear()} CampusKart. All rights reserved.</p>
+          <div className="flex justify-center space-x-6 mt-6">
+            <Link href="/privacy" className="text-sm hover:text-white transition-colors duration-200">
+              Privacy Policy
+            </Link>
+            <Link href="/terms" className="text-sm hover:text-white transition-colors duration-200">
+              Terms of Service
+            </Link>
+            <Link href="/contact" className="text-sm hover:text-white transition-colors duration-200">
+              Contact Us
+            </Link>
+          </div>
+        </div>
       </footer>
     </div>
   );
