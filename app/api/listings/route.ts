@@ -8,7 +8,7 @@ export async function GET ()  {
     await connectToDB();
 
     const listings = await ListingModel.find({status:'active'})
-      .select("title price image") 
+      .select("title price image category") 
       .lean(); 
     
     

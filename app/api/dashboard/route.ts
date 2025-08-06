@@ -24,7 +24,7 @@ export async function GET() {
     };
 
     const listings = await Listing.find({sellerId: userId })
-      .select("title description price image")
+      .select("title description price image category status")
       .lean();
 
     return Response.json({ userDetails, listings });

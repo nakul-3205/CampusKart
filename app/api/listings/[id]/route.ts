@@ -9,7 +9,7 @@ export async function GET (req: Request, context: { params: { id: string } })  {
     const { id } = await context.params;
 
     const listing = await Listing.findById(id).lean();
-    console.log(listing)//only for dev purposes
+    // console.log(listing)//only for dev purposes
 
     if (!listing) {
       return NextResponse.json(

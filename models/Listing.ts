@@ -5,6 +5,7 @@ export interface IListing {
   title: string;
   description: string;
   price: number;
+  category:string
   sellerId: string;
   sellerName: string;
   sellerEmail: string;
@@ -19,6 +20,7 @@ const ListingSchema = new Schema<IListing>({
   title: { type: String, required: true },
   description: { type: String, required: true },
   price: { type: Number, required: true },
+  category:{type:String,required:true},
   sellerId: { type: String, required: true },
   sellerName: { type: String },
   sellerEmail: { type: String },

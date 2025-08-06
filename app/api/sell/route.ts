@@ -17,9 +17,10 @@ export async function POST(req: NextRequest) {
 
     await connectToDB();
     const body = await req.json();
-    const { title, description, category, price, image } = body;
+    const { title, description, category, price, image, } = body;
+    console.log(body)
 
-    if (!title || !description || !category || !price || !image || !userId) {
+    if (!title || !description || !category || !price || !image || !userId ||!category) {
       return NextResponse.json({ error: "Missing fields" }, { status: 400 });
     }
 
@@ -47,25 +48,26 @@ export async function POST(req: NextRequest) {
       if (!safeSight) {
                 console.log('failing at sightenginge',safeSight,reasonSight)
 
-        return NextResponse.json({ error: `Sightengine flagged: ${reasonSight}` }, { status: 400 });
+        return NextResponse.json({ message: "Oops! That image doesn't meet our content guidelines. Please try another one." }, { status: 409 });
       }
     } catch {
-      return NextResponse.json({ error: "Sightengine scan failed" }, { status: 500 });
+      return NextResponse.json({ message: "Oops! That image doesn't meet our content guidelines. Please try another one." }, { status: 500 });
     }
 
     try {
       const { safe: safeHive, reason: reasonHive } = await scanHive(imageUrl);
       if (!safeHive) {
         console.log('failing at hive',safeHive,reasonHive)
-        return NextResponse.json({ error: `Hive flagged: ${reasonHive}` }, { status: 409 });
+        return NextResponse.json({ message: `Oops! That image doesn't meet our content guidelines. Please try another one.` }, { status: 409 });
       }
     } catch {
-      return NextResponse.json({ error: "Hive scan failed" }, { status: 500 });
+      return NextResponse.json({ message: "Oops! That image doesn't meet our content guidelines. Please try another one." }, { status: 500 });
     }
 
     const newListing = await Listing.create({
       title,
       description,
+      category,
       price,
       sellerId: userId,
       sellerName: name,

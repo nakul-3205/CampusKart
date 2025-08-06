@@ -3,15 +3,19 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import Image from 'next/image';
+import Link from 'next/link';
 import {
-  TagIcon, // For price
-  CubeTransparentIcon, // For general item
-  UserCircleIcon, // For seller name
-  EnvelopeIcon, // For seller email
-  ArrowPathIcon, // For loading
-  ExclamationCircleIcon, // For error
-  CheckCircleIcon, // For status Available
-  XCircleIcon // For status Sold
+  TagIcon,
+  CubeTransparentIcon,
+  UserCircleIcon,
+  EnvelopeIcon,
+  ArrowPathIcon,
+  ExclamationCircleIcon,
+  CheckCircleIcon,
+  XCircleIcon,
+  ShoppingBagIcon,
+  ClipboardDocumentListIcon,
+  ArrowLeftIcon
 } from '@heroicons/react/24/solid';
 
 type ListingDetails = {
@@ -19,8 +23,8 @@ type ListingDetails = {
   title: string;
   price: number;
   description?: string;
-  image: string; // Assuming this is the URL
-  status: 'Available' | 'Sold' | string; // Explicitly define common statuses
+  image: string;
+  status: 'Available' | 'Sold' | string;
   sellerName?: string;
   sellerEmail?: string;
 };
@@ -47,7 +51,6 @@ export default function ListingDetailsPage() {
           setError(data.message || 'Listing not found.');
         }
       } catch (err) {
-        console.error('Error fetching listing:', err);
         setError('Failed to load listing details. Please try again.');
       } finally {
         setLoading(false);
@@ -59,9 +62,9 @@ export default function ListingDetailsPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100">
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="flex flex-col items-center text-gray-700">
-          <ArrowPathIcon className="animate-spin h-12 w-12 text-indigo-600 mb-4" />
+          <ArrowPathIcon className="animate-spin h-12 w-12 text-purple-600 mb-4" />
           <p className="text-xl font-medium">Loading listing details...</p>
         </div>
       </div>
@@ -70,7 +73,7 @@ export default function ListingDetailsPage() {
 
   if (error) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-red-100 text-red-800 p-6">
+      <div className="min-h-screen flex items-center justify-center bg-red-50 text-red-800 p-6">
         <ExclamationCircleIcon className="h-12 w-12 mr-4" />
         <p className="text-xl font-semibold text-center">{error}</p>
       </div>
@@ -86,89 +89,125 @@ export default function ListingDetailsPage() {
     );
   }
 
-  // Determine status badge colors
-  const statusColors = {
-    Available: 'bg-green-100 text-green-800',
-    Sold: 'bg-red-100 text-red-800',
-    default: 'bg-gray-100 text-gray-800',
-  };
-
   const getStatusBadge = (status: string) => {
     switch (status) {
       case 'Available':
-        return <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${statusColors.Available}`}><CheckCircleIcon className="h-4 w-4 mr-1" /> Available</span>;
+        return (
+          <span className="inline-flex items-center px-4 py-1.5 rounded-full text-sm font-semibold bg-green-100 text-green-800">
+            <CheckCircleIcon className="h-4 w-4 mr-2" />
+            Available
+          </span>
+        );
       case 'Sold':
-        return <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${statusColors.Sold}`}><XCircleIcon className="h-4 w-4 mr-1" /> Sold</span>;
+        return (
+          <span className="inline-flex items-center px-4 py-1.5 rounded-full text-sm font-semibold bg-red-100 text-red-800">
+            <XCircleIcon className="h-4 w-4 mr-2" />
+            Sold
+          </span>
+        );
       default:
-        return <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${statusColors.default}`}><CubeTransparentIcon className="h-4 w-4 mr-1" /> {status}</span>;
+        return (
+          <span className="inline-flex items-center px-4 py-1.5 rounded-full text-sm font-semibold bg-gray-100 text-gray-800">
+            <CubeTransparentIcon className="h-4 w-4 mr-2" />
+            {status}
+          </span>
+        );
     }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center py-10 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-4xl w-full bg-white rounded-2xl shadow-2xl overflow-hidden transform transition-all duration-300 hover:shadow-3xl">
-        {/* Image Section */}
-        <div className="relative w-full h-96 bg-gray-200 overflow-hidden">
-          <Image
-            src={listing.image}
-            alt={listing.title}
-            layout="fill"
-            objectFit="cover"
-            className="transition-transform duration-300 hover:scale-105"
-          />
+    <div className="min-h-screen bg-gray-100 py-8">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <div className="mb-6">
+          <Link href="/feed" className="inline-flex items-center text-gray-600 hover:text-purple-600 transition-colors font-medium">
+            <ArrowLeftIcon className="h-5 w-5 mr-2" />
+            Back to Marketplace
+          </Link>
         </div>
 
-        {/* Details Section */}
-        <div className="p-8 md:p-10">
-          <div className="flex justify-between items-start mb-4">
-            <h1 className="text-4xl font-extrabold text-gray-900 leading-tight pr-4">
-              {listing.title}
-            </h1>
-            <div className="flex-shrink-0 mt-1">
-              {getStatusBadge(listing.status)}
-            </div>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 bg-white rounded-3xl shadow-2xl overflow-hidden p-6 md:p-10">
+          {/* Image Section */}
+          <div className="relative w-full h-[500px] rounded-2xl overflow-hidden shadow-xl">
+            <Image
+              src={listing.image}
+              alt={listing.title}
+              layout="fill"
+              objectFit="contain" 
+              priority
+            />
           </div>
 
-          <p className="text-5xl font-extrabold text-indigo-600 flex items-center mb-6">
-            <TagIcon className="h-10 w-10 mr-4 text-indigo-500" />
-            ₹{listing.price.toLocaleString('en-IN')}
-          </p>
+          {/* Details Section */}
+          <div className="flex flex-col justify-between">
+            <div>
+              <div className="flex justify-between items-start mb-4">
+                <h1 className="text-4xl font-extrabold text-gray-900 leading-tight pr-4">
+                  {listing.title}
+                </h1>
+                <div className="flex-shrink-0 mt-1">
+                  {getStatusBadge(listing.status)}
+                </div>
+              </div>
 
-          {listing.description && (
-            <>
-              <h2 className="text-xl font-semibold text-gray-800 mb-3 border-b pb-2 border-gray-200">
-                Description
-              </h2>
-              <p className="mt-4 text-gray-700 leading-relaxed text-lg mb-8">
-                {listing.description}
+              <p className="mt-4 text-5xl font-extrabold text-purple-600 flex items-center">
+                <TagIcon className="h-10 w-10 mr-4 text-purple-500" />
+                ₹{listing.price.toLocaleString('en-IN')}
               </p>
-            </>
-          )}
-
-          {/* Seller Info Section */}
-          {(listing.sellerName || listing.sellerEmail) && (
-            <div className="bg-gray-50 rounded-lg p-6 border border-gray-200 shadow-sm">
-              <h2 className="text-xl font-semibold text-gray-800 mb-4 flex items-center">
-                <UserCircleIcon className="h-6 w-6 mr-3 text-indigo-500" />
-                Seller Information
-              </h2>
-              {listing.sellerName && (
-                <p className="text-lg text-gray-700 flex items-center mb-2">
-                  <UserCircleIcon className="h-5 w-5 mr-3 text-gray-500" />
-                  <span className="font-medium">Name:</span> {listing.sellerName}
-                </p>
-              )}
-              {listing.sellerEmail && (
-                <p className="text-lg text-gray-700 flex items-center">
-                  <EnvelopeIcon className="h-5 w-5 mr-3 text-gray-500" />
-                  <span className="font-medium">Email:</span>{' '}
-                  <a href={`mailto:${listing.sellerEmail}`} className="text-blue-600 hover:underline">
-                    {listing.sellerEmail}
-                  </a>
-                </p>
-              )}
             </div>
-          )}
+            
+            {listing.description && (
+              <div className="mt-8">
+                <h2 className="text-2xl font-bold text-gray-800 mb-3 flex items-center">
+                  <ClipboardDocumentListIcon className="h-6 w-6 mr-3 text-purple-600" />
+                  Description
+                </h2>
+                <p className="text-gray-700 leading-relaxed text-lg whitespace-pre-line">
+                  {listing.description}
+                </p>
+              </div>
+            )}
+            
+            {(listing.sellerName || listing.sellerEmail) && (
+              <div className="mt-8 p-6 bg-gray-50 rounded-xl border border-gray-200">
+                <h2 className="text-2xl font-bold text-gray-800 mb-4 flex items-center">
+                  <UserCircleIcon className="h-6 w-6 mr-3 text-purple-600" />
+                  Seller Information
+                </h2>
+                <div className="space-y-3">
+                  {listing.sellerName && (
+                    <p className="text-lg text-gray-700 flex items-center">
+                      <span className="font-medium w-24">Name:</span>
+                      <span className="ml-3 font-semibold text-gray-700">
+                        {listing.sellerName}
+                      </span>
+                    </p>
+                  )}
+                  {listing.sellerEmail && (
+                    <p className="text-lg text-gray-700 flex items-center">
+                      <span className="font-medium w-24">Email:</span>
+                      <a
+                        href={`mailto:${listing.sellerEmail}`}
+                        className="ml-3 text-purple-600 hover:underline font-semibold"
+                      >
+                        {listing.sellerEmail}
+                      </a>
+                    </p>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {listing.status === 'Available' && (
+              <a
+                href={`mailto:${listing.sellerEmail}`}
+                className="mt-8 w-full flex items-center justify-center bg-purple-600 text-white font-semibold py-4 px-6 rounded-lg hover:bg-purple-700 transition-colors shadow-lg text-lg"
+              >
+                <EnvelopeIcon className="h-6 w-6 mr-3" />
+                Contact Seller
+              </a>
+            )}
+          </div>
         </div>
       </div>
     </div>
